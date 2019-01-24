@@ -114,8 +114,10 @@ textarea {
 	background-color: #363940;
 	border-bottom: 1px solid #474c51;
 	padding: 15px;
+	height: 65px;
 
 	display: flex;
+	align-items: center;
 	justify-content: space-between;
 }
 
@@ -123,6 +125,7 @@ textarea {
 	font-family: 'Lobster', cursive;
 	color: orange;
 	font-size: 1.5em;
+	transition: color 0.2s;
 }
 
 .toolbar-logout {

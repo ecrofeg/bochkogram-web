@@ -80,10 +80,24 @@ class App extends React.Component<{}, State> {
 			});
 		});
 
+		this.socket.emit('i need messages');
+
 		setTimeout(() => this.messageInput.focus(), 200);
 	}
 
-	componentDidMount() {
+	@autobind
+	private onLogout(): void {
+		localStorage.removeItem(USER_KEY);
+
+		this.setState({
+			user: null,
+			messages: []
+		});
+
+		this.socket.off('load messages');
+	}
+
+	public componentDidMount(): void {
 		let userInfoString = localStorage.getItem(USER_KEY);
 
 		if (userInfoString) {
@@ -93,7 +107,7 @@ class App extends React.Component<{}, State> {
 		}
 	}
 
-	sendMessage() {
+	private sendMessage(): void {
 		if (this.state.inputText && this.state.inputText.trim()) {
 			this.socket.emit('add message', {
 				text: this.state.inputText,
@@ -116,10 +130,10 @@ class App extends React.Component<{}, State> {
 					<>
 						<div className="toolbar">
 							<div className="toolbar-logo" style={{ color: getRandomColor() }}>
-								Bochkogram...
+								Bochkogram
 							</div>
 
-							<div className="toolbar-logout">
+							<div className="toolbar-logout" onClick={this.onLogout}>
 								<span>logout</span> <ExitIcon />
 							</div>
 						</div>
