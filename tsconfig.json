@@ -27,6 +27,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+    "strictNullChecks": false,
     "strict": true
   },
   "include": [

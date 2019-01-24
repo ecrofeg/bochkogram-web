@@ -41,33 +41,6 @@ h1 {
 	min-height: 300px;
 }
 
-.auth-input {
-	margin-top: 40px;
-}
-
-.auth-proceed {
-	appearance: none;
-	border: none;
-	outline: none;
-	border-radius: 3px;
-	width: 100%;
-
-	background-color: #673ab7;
-	color: rgba(255, 255, 255, 0.8);
-	transition: color 0.2s;
-
-	margin-top: 20px;
-	padding: 10px 15px;
-	cursor: pointer;
-
-	font-weight: 600;
-	font-size: 1.2rem;
-}
-
-.auth-proceed:hover {
-	color: #ffffff;
-}
-
 input,
 textarea {
 	font-family: 'PT Sans', sans-serif;
@@ -109,6 +82,7 @@ textarea {
 }
 
 .newMessage-button {
+	-webkit-tap-highlight-color: transparent;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -120,56 +94,13 @@ textarea {
 	z-index: 1;
 }
 
+.newMessage-button:active {
+	fill: rgba(255, 255, 255, 1);
+}
+
 .newMessage-button svg {
 	position: relative;
 	left: 2px;
 	width: 20px;
 	height: 20px;
-}
-
-.messages {
-	padding: 15px;
-	padding-bottom: 70px;
-	margin-bottom: 20px;
-	overflow-x: scroll;
-}
-
-.message:not(:last-of-type) {
-	margin-bottom: 20px;
-}
-
-.message_smallMargin:not(:last-of-type) {
-	margin-bottom: 1px;
-}
-
-.message_smallMargin .message-text {
-	border-radius: 0 10px 10px 0;
-}
-
-.message:not(.message_smallMargin) + .message_smallMargin .message-text {
-	border-radius: 10px 10px 10px 0;
-}
-
-.message-author {
-	font-size: 0.9375rem;
-	color: #ffffff;
-	font-weight: 500;
-	margin-bottom: 3px;
-}
-
-.message-date {
-	color: rgba(255, 255, 255, 0.5);
-}
-
-.message-text {
-	color: #dcddde;
-	font-size: 0.9375rem;
-	background-color: #474c51;
-	padding: 10px;
-	border-radius: 0 10px 10px 10px;
-	display: inline-block;
-}
-
-.message-text_yours {
-	background-color: #607d8b;
 }

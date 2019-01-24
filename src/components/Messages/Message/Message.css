@@ -1,0 +1,40 @@
+.message:not(:last-of-type) {
+	margin-bottom: 20px;
+}
+
+.message_smallMargin:not(:last-of-type) {
+	margin-bottom: 1px;
+}
+
+.message_smallMargin .message-text {
+	border-radius: 0 10px 10px 0;
+}
+
+.message:not(.message_smallMargin) + .message_smallMargin .message-text,
+.message:first-of-type .message-text {
+	border-radius: 10px 10px 10px 0;
+}
+
+.message-author {
+	font-size: 0.9375rem;
+	color: #ffffff;
+	font-weight: 500;
+	margin-bottom: 3px;
+}
+
+.message-date {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.message-text {
+	color: #dcddde;
+	font-size: 0.9375rem;
+	background-color: #474c51;
+	padding: 10px;
+	border-radius: 0 10px 10px 10px;
+	display: inline-block;
+}
+
+.message-text_yours {
+	background-color: #607d8b;
+}

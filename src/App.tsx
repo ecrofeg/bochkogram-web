@@ -1,52 +1,18 @@
 import * as React from 'react';
-import cn from 'classnames';
 import io from 'socket.io-client';
-import { format } from 'date-fns';
-import './App.css';
 import autobind from 'autobind-decorator';
 
-const USER_KEY = 'bochka-user-key';
-
-const colors = [
-	'#f44336',
-	'#e91e63',
-	'#9c27b0',
-	'#673ab7',
-	'#3f51b5',
-	'#2196f3',
-	'#03a9f4',
-	'#00bcd4',
-	'#009688',
-	'#4caf50',
-	'#8bc34a',
-	'#cddc39',
-	'#ffeb3b',
-	'#ffc107',
-	'#ff9800',
-	'#ff5722',
-	'#795548'
-];
-
-const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
-
-interface User {
-	name: string;
-	color: string;
-}
-
-interface Message {
-	author: string;
-	color: string;
-	text: string;
-	date: Date;
-}
+import './App.css';
+import Auth from './components/Auth/Auth';
+import { USER_KEY } from './utils';
+import { Message, User } from './types';
+import Messages from './components/Messages/Messages';
 
 interface State {
 	messages: Message[];
 	inputText: string;
 	authorInputText: string;
-	user: string;
-	authorColor: string;
+	user: User;
 }
 
 class App extends React.Component<{}, State> {
@@ -57,8 +23,7 @@ class App extends React.Component<{}, State> {
 		messages: [],
 		inputText: '',
 		authorInputText: '',
-		user: '',
-		authorColor: '#ffffff'
+		user: null
 	};
 
 	constructor(props: {}) {
@@ -72,30 +37,6 @@ class App extends React.Component<{}, State> {
 	@autobind
 	getMessageInputRef(element: HTMLTextAreaElement): void {
 		this.messageInput = element;
-	}
-
-	@autobind
-	onAuth() {
-		if (this.state.authorInputText && this.state.authorInputText.trim()) {
-			localStorage.setItem(
-				USER_KEY,
-				JSON.stringify({
-					name: this.state.authorInputText.trim(),
-					color: getRandomColor()
-				})
-			);
-
-			setTimeout(() => this.load(), 100);
-		} else {
-			alert('SAY ME YOUR FUCKING NAME');
-		}
-	}
-
-	@autobind
-	onAuthInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-		this.setState({
-			authorInputText: event.target.value
-		});
 	}
 
 	@autobind
@@ -121,40 +62,42 @@ class App extends React.Component<{}, State> {
 		}
 	}
 
-	load() {
+	@autobind
+	private onAuth(user: User): void {
+		this.setState({
+			user: user
+		});
+
+		this.socket.on('load messages', (result: Message[]) => {
+			if (!this.state.messages.length) {
+				setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 50);
+			}
+
+			this.setState({
+				messages: result
+			});
+		});
+
+		setTimeout(() => this.messageInput.focus(), 200);
+	}
+
+	componentDidMount() {
 		let userInfoString = localStorage.getItem(USER_KEY);
 
 		if (userInfoString) {
 			const userInfo: User = JSON.parse(userInfoString);
 
-			this.setState({
-				user: userInfo.name,
-				authorColor: userInfo.color
-			});
-
-			this.socket.on('load messages', (result: Message[]) => {
-				this.setState({
-					messages: result
-				});
-
-				setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 200);
-			});
+			this.onAuth(userInfo);
 		}
-	}
-
-	componentDidMount() {
-		this.load();
-
-		setTimeout(() => this.messageInput.focus(), 200);
 	}
 
 	sendMessage() {
 		if (this.state.inputText && this.state.inputText.trim()) {
 			this.socket.emit('add message', {
 				text: this.state.inputText,
-				author: this.state.user,
-				color: this.state.authorColor
-			});
+				author: this.state.user.name,
+				color: this.state.user.color
+			} as Message);
 
 			this.setState({
 				inputText: ''
@@ -164,46 +107,12 @@ class App extends React.Component<{}, State> {
 		}
 	}
 
-	render() {
+	public render(): React.ReactNode {
 		return (
 			<div className="app">
 				{this.state.user ? (
 					<>
-						<div className="messages">
-							{this.state.messages.map((message, index) => (
-								<div
-									key={index}
-									className={cn('message', {
-										message_smallMargin:
-											this.state.messages[index + 1] &&
-											this.state.messages[index + 1].author === message.author
-									})}
-								>
-									{(!this.state.messages[index - 1] ||
-										this.state.messages[index - 1].author !== message.author) && (
-										<div className="message-author" style={{ color: message.color }}>
-											{message.author},&nbsp;
-											<span className="message-date">{format(message.date, 'HH:mm')}</span>
-										</div>
-									)}
-
-									<span
-										className={cn('message-text', {
-											'message-text_yours': this.state.user === message.author
-										})}
-									>
-										{message.text.split('\n').map(function(item, key) {
-											return (
-												<span key={key}>
-													{item}
-													<br />
-												</span>
-											);
-										})}
-									</span>
-								</div>
-							))}
-						</div>
+						<Messages messages={this.state.messages} currentUser={this.state.user} />
 
 						<div className="newMessage">
 							<textarea
@@ -226,24 +135,7 @@ class App extends React.Component<{}, State> {
 						</div>
 					</>
 				) : (
-					<div className="auth">
-						<h1>WHO THE FUCK ARE YOU?</h1>
-
-						<input
-							className="auth-input"
-							placeholder="I am..."
-							autoComplete="off"
-							autoCorrect="off"
-							spellCheck={false}
-							value={this.state.authorInputText}
-							onChange={this.onAuthInputChange}
-							required={true}
-						/>
-
-						<button className="auth-proceed" onClick={this.onAuth}>
-							PROCEED TO BOCHKA
-						</button>
-					</div>
+					<Auth onAuth={this.onAuth} />
 				)}
 			</div>
 		);
