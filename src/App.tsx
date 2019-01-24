@@ -69,8 +69,8 @@ class App extends React.Component<{}, State> {
 		});
 
 		this.socket.on('load messages', (result: Message[]) => {
-			if (!this.state.messages.length) {
-				setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 50);
+			if (!this.state.messages.length || window.innerHeight + window.pageYOffset === document.body.scrollHeight) {
+				setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 100);
 			}
 
 			this.setState({
