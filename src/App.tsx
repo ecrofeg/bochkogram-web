@@ -1,11 +1,12 @@
 import * as React from 'react';
 import SendIcon from '@material-ui/icons/Send';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import io from 'socket.io-client';
 import autobind from 'autobind-decorator';
 
 import './App.css';
 import Auth from './components/Auth/Auth';
-import { USER_KEY } from './utils';
+import { getRandomColor, USER_KEY } from './utils';
 import { Message, User } from './types';
 import Messages from './components/Messages/Messages';
 
@@ -113,7 +114,16 @@ class App extends React.Component<{}, State> {
 			<div className="app">
 				{this.state.user ? (
 					<>
-						<div />
+						<div className="toolbar">
+							<div className="toolbar-logo" style={{ color: getRandomColor() }}>
+								Bochkogram...
+							</div>
+
+							<div className="toolbar-logout">
+								<span>logout</span> <ExitIcon />
+							</div>
+						</div>
+
 						<Messages messages={this.state.messages} currentUser={this.state.user} />
 
 						<div className="newMessage">

@@ -12,7 +12,7 @@ body {
 
 body {
 	background-color: #363940;
-	font-family: 'PT Sans', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 #root {
@@ -103,4 +103,47 @@ textarea {
 	left: 2px;
 	width: 20px;
 	height: 20px;
+}
+
+.toolbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+
+	background-color: #363940;
+	border-bottom: 1px solid #474c51;
+	padding: 15px;
+
+	display: flex;
+	justify-content: space-between;
+}
+
+.toolbar-logo {
+	font-family: 'Lobster', cursive;
+	color: orange;
+	font-size: 1.5em;
+}
+
+.toolbar-logout {
+	display: flex;
+	align-items: center;
+
+	color: rgba(255, 255, 255, 0.5);
+	transition: color 0.15s;
+	cursor: pointer;
+}
+
+.toolbar-logout span {
+	margin-right: 10px;
+	opacity: 0;
+	transition: opacity 0.15s;
+}
+
+.toolbar-logout:hover {
+	color: #ffffff;
+}
+
+.toolbar-logout:hover span {
+	opacity: 1;
 }
