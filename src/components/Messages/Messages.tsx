@@ -19,25 +19,27 @@ class Messages extends React.Component<Props> {
 		const messages = this.props.messages;
 
 		return (
-			<div className="messages">
-				{messages.map((message, index) => (
-					<Message
-						key={index}
-						message={message}
-						isCurrentUserMessage={this.props.currentUser.name === message.author}
-						isGrouped={
-							messages[index + 1] &&
-							messages[index + 1].author === message.author &&
-							!messageIsNew(messages[index + 1], message)
-						}
-						showAuthor={
-							!messages[index - 1] ||
-							messages[index - 1].author !== message.author ||
-							messageIsNew(message, messages[index - 1])
-						}
-					/>
-				))}
-			</div>
+			messages.length && (
+				<div className="messages">
+					{messages.map((message, index) => (
+						<Message
+							key={index}
+							message={message}
+							isCurrentUserMessage={this.props.currentUser.name === message.author}
+							isGrouped={
+								messages[index + 1] &&
+								messages[index + 1].author === message.author &&
+								!messageIsNew(messages[index + 1], message)
+							}
+							showAuthor={
+								!messages[index - 1] ||
+								messages[index - 1].author !== message.author ||
+								messageIsNew(message, messages[index - 1])
+							}
+						/>
+					))}
+				</div>
+			)
 		);
 	}
 }

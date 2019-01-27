@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 
 import { Message as MessageType } from '../../../types';
 import './Message.css';
+import { replaceUrl } from '../../../utils';
 
 interface Props {
 	message: MessageType;
@@ -29,7 +30,7 @@ class Message extends React.Component<Props> {
 					{message.text.split('\n').map(function(item, key) {
 						return (
 							<span key={key}>
-								{item}
+								{replaceUrl(item)}
 								<br />
 							</span>
 						);
