@@ -44,7 +44,7 @@ class Auth extends React.Component<Props, State> {
 	public render(): React.ReactNode {
 		return (
 			<div className="auth">
-				<h1>WHO THE ARE YOU?</h1>
+				<h1>WHO THE HELL ARE YOU?</h1>
 
 				<input
 					className="auth-input"
